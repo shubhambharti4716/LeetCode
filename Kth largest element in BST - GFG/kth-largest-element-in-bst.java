@@ -114,69 +114,26 @@ class Node
     }
 }
 */
-class Solution
-{
+class Solution {
+    int count = 0; // variable to keep track of the count
+    int result = -1; // variable to store the result
+	void kthLargestUtil(Node root, int k) {
+        
+        if (root == null || count >= k) // base case: if root is null or count is greater than or equal to k
+            return; 
+        kthLargestUtil(root.right, k); // recursively call the function on the right child
+        
+        count++; // increment the count
 
-    // return the Kth largest element in the given BST rooted at 'root'
-    public int kthLargest(Node root,int k)
-    {
-        //Your code here
-        Node curr = root;
-    Node Klargest = null;
- 
-    // count variable to keep count of visited Nodes
-    int count = 0;
- 
-    while (curr != null)
-    {
-        // if right child is NULL
-        if (curr.right == null)
-        {
- 
-            // first increment count and check if count = k
-            if (++count == k)
-                Klargest = curr;
- 
-            // otherwise move to the left child
-            curr = curr.left;
+        if (count == k) { // if count is equal to k
+            result = root.data; // update the result with the data value of current root
+            return; 
         }
- 
-        else
-        {
- 
-            // find inorder successor of current Node
-            Node succ = curr.right;
- 
-            while (succ.left != null && succ.left != curr)
-                succ = succ.left;
- 
-            if (succ.left == null)
-            {
- 
-                // set left child of successor to the
-                // current Node
-                succ.left = curr;
- 
-                // move current to its right
-                curr = curr.right;
-            }
- 
-            // restoring the tree back to original binary
-            // search tree removing threaded links
-            else
-            {
- 
-                succ.left = null;
- 
-                if (++count == k)
-                    Klargest = curr;
- 
-                // move current to its left child
-                curr = curr.left;
-            }
-        }
-    }
-    return Klargest.data;
+        kthLargestUtil(root.left, k); // recursively call the function on the left child
+    } 
+  
+    int kthLargest(Node root, int k) { 
+        kthLargestUtil(root, k); // call the utility function to find the kth largest element
+        return result; // return the result
+    } 
 }
- 
-    }
