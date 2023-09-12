@@ -1,17 +1,22 @@
 class Solution {
-    public int minDeletions(String s) {
-        int[] freqs = new int[26];
-        for (char c : s.toCharArray()) {
-            freqs[c - 'a']++;
+     public int minDeletions(String s) {
+        int[] arr = new int[26];
+        int res = 0;
+        for (char ch : s.toCharArray()) {
+            arr[ch - 'a']++;
         }
-        int deletions = 0;
-        Set<Integer> uniqueIntegers = new HashSet();
-        for (int freq : freqs) {
-            while (freq != 0 && !uniqueIntegers.add(freq)) {
-                deletions++;
+        Set<Integer> used = new HashSet<>();
+        for (int i = 0; i < 26; i++) {
+            int freq = arr[i];
+            while (freq > 0) {
+                if (!used.contains(freq)) {
+                    used.add(freq);
+                    break;
+                } 
                 freq--;
+                res++;
             }
         }
-        return deletions;        
+        return res; 
     }
 }
