@@ -1,29 +1,25 @@
-/**
- * @param {string[][]} tickets
- * @return {string[]}
- */
 var findItinerary = function(tickets) {
-    const graph = {};
-    
-    for (const [src, dst] of tickets) {
-        if (!graph[src]) graph[src] = [];
-        graph[src].push(dst);
-    }
-    
-    for (const key in graph) {
-        graph[key].sort().reverse();
-    }
-    
-    const itinerary = [];
-    
-    function dfs(airport) {
-        while (graph[airport] && graph[airport].length > 0) {
-            dfs(graph[airport].pop());
+    var map = {};
+    var res = [];
+    for(var i=0; i<tickets.length; i++) {
+        var dep = tickets[i][0];
+        var des = tickets[i][1];
+        if(map[dep]) {
+            map[dep].push(des);
+        } else {
+            map[dep] = [des];
         }
-        itinerary.push(airport);
     }
-    
-    dfs("JFK");
-    
-    return itinerary.reverse();
+    for(let loc in map) {
+        map[loc].sort();
+    }  
+    var dfs = function(node) {
+        var des = map[node];
+        while(des && des.length>0) {
+            dfs(des.shift());
+        }
+        res.push(node);
+    }
+    dfs('JFK');
+    return res.reverse();
 };
