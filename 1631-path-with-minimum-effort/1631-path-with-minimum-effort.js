@@ -3,110 +3,58 @@
  * @return {number}
  */
 var minimumEffortPath = function(heights) {
-     const dir = [[-1,0],[0,-1],[0,1],[1,0]];
- 
-    const costs = [];
-    const visited = [];
-    for(let i=0;i<heights.length;i++){
-        costs[i]= [];
-        visited[i]= [];
-        for(let j=0;j<heights[0].length;j++){
-            costs[i][j]= Infinity;
-            visited[i][j]= false;
+    const directions = [[-1, 0], [0, -1], [1, 0], [0, 1]],
+          visited = new Array(heights.length).fill(null).map(() => new Array(heights[0].length).fill(false)),
+          cache = new Array(heights.length).fill(null).map(() => new Array(heights[0].length).fill(Infinity));
+    
+    let minEffort = Infinity;
+    const nextDirs = new MinPriorityQueue();
+    
+    const dfs = ([row, col], currEffort) => {
+        //We have achieved our goal;
+        if (row === 0 && col === 0) {
+            minEffort = Math.min(minEffort, currEffort);
+            nextDirs.clear();
+            return;
         }
-    }
-    
-    costs[0][0] = 0;
-    const queue = new PQ((a,b)=>a[2]-b[2]);
-    queue.add([0,0,0]);
-    
-    while(queue.getSize()>0){
-        const [i,j,cost] = queue.remove();
-        visited[i][j]= true;
         
-        if(i===heights.length-1 && j===heights[0].length-1) return cost;
-       
-        dir.map(item=>{
-            const row = item[0]+i, col = item[1]+j;
-                if(row>=0 
-                   && col>=0 
-                   && row<heights.length 
-                   && col<heights[0].length 
-                   && visited[row][col]==false){
-                    
-                    const diff  =  Math.abs(heights[i][j]-heights[row][col]);
-                    const currentDiff= Math.max(costs[i][j],diff);
-                    
-                    if(costs[row][col]>currentDiff){
-                        costs[row][col] = currentDiff; 
-                        queue.add([row,col,currentDiff]);
-                    }
-                }
+        if (visited[row][col])
+            return;
+        
+        //We don't want to visit the same node twice.
+        visited[row][col] = true;
+        
+        //This is the current less effort for this node;
+        cache[row][col] = currEffort;
+        
+        directions.forEach(([rowDirection, colDirection]) => {
+            const newRow = rowDirection + row, newCol = colDirection + col;
+
+            if (newRow < 0 || newRow === heights.length || 
+                newCol < 0 || newCol === heights[0].length || 
+                visited[newRow][newCol]) {
+                return;
+            }
+
+            const nextEffort = Math.max(currEffort, Math.abs(heights[row][col] - heights[newRow][newCol]));
+            
+            //Since this is a MinPriorityQueue, the elements with less effort will run first.
+            nextDirs.enqueue({row:newRow, col:newCol, effort:nextEffort}, nextEffort);
+                
         });
+        
+        while(!nextDirs.isEmpty()) {
+            const next = nextDirs.dequeue().element;
+            //We only want to visit nodes if the effor will be less than the current effort.
+            if (next.effort < cache[next.row][next.col]) {
+                dfs([next.row, next.col], next.effort);
+            }
+        }
+        
+        // We unvisit this node.
+        visited[row][col] = false;
     }
-    return costs[heights.length-1][heights[0].length-1];
+    dfs([heights.length - 1, heights[0].length - 1], -1);
+    return minEffort === -1 ? 0 : minEffort;
 };
 
-function PQ(compareFn){
-    this.heap = [];
-    this.compareFn = compareFn;
-}
-
-PQ.prototype.peek =function(){
-    return this.heap[1];
-}
-
-PQ.prototype.getSize = function () {
-    return this.heap.length > 1 ? this.heap.length - 1 : 0;
-};
-
-
-PQ.prototype.add = function(el){
-    const index= this.heap.length> 1 ? this.heap.length : 1;
-    this.heap[index] = el;
-    this.heapifyUp(index);
-}
-
-PQ.prototype.heapifyUp = function(index){
-    if(index<=1) return;
-    const el = this.heap[index];
-    const parentIndex = Math.floor(index/2);
-    const parentEl = this.heap[parentIndex];
-    
-    if(this.compareFn(parentEl,el)>0){
-        this.heap[index] = parentEl;
-        this.heap[parentIndex] = el;
-        this.heapifyUp(parentIndex);
-    }
-}
-
-PQ.prototype.remove = function(){
-    if(this.heap.length<=1) return;
-    if(this.heap.length===2) return this.heap.pop();
-    
-    const el = this.heap[1];
-    this.heap[1]= this.heap[this.heap.length-1];
-    this.heap.pop();
-    this.heapifyDown(1);
-    return el;  
-    
-}
-
-PQ.prototype.heapifyDown = function(index){
-    if(index>=this.heap.length-1) return;
-    const el  = this.heap[index];
-    const leftIndex = index * 2;
-    const rightIndex = leftIndex +1;
-    const leftEl = this.heap[leftIndex];
-    const rightEl = this.heap[rightIndex];
-    
-    if((leftEl && this.compareFn(el,leftEl)>0) || (rightEl && this.compareFn(el,rightEl)>0)){
-        const newIndex = !rightEl || this.compareFn(rightEl,leftEl) >= 0 ? leftIndex : rightIndex;
-        this.heap[index] = this.heap[newIndex]; 
-        this.heap[newIndex] = el;
-        this.heapifyDown(newIndex);
-    }
-    
-}
- 
-    
