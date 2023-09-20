@@ -1,32 +1,27 @@
 class Solution {
-    public int minOperations(int[] nums, int targetSum) {
-        int totalSum = Arrays.stream(nums).sum();
-        int target = totalSum - targetSum; // Calculate the target sum difference
-
-        if (target < 0)
-            return -1; // Return -1 if target sum is not achievable
-
-        if (target == 0)
-            return nums.length; // Return the number of elements if target sum is 0
-
-        int n = nums.length; // Number of elements in the array
-        int minOperations = Integer.MAX_VALUE; // Minimum operations to achieve the target sum
-        int currentSum = 0; // Current sum of elements
-        int leftIndex = 0, rightIndex = 0; // Pointers for the sliding window
-
-        while (rightIndex < n) {
-            currentSum += nums[rightIndex];
-            rightIndex++;
-
-            while (currentSum > target && leftIndex < n) {
-                currentSum -= nums[leftIndex];
-                leftIndex++;
-            }
-
-            if (currentSum == target)
-                minOperations = Math.min(minOperations, n - (rightIndex - leftIndex));
-        }
-
-        return (minOperations == Integer.MAX_VALUE) ? -1 : minOperations; // Return the minimum operations or -1 if not possible
+    public int minOperations(int[] nums, int x) {
+       int n=nums.length;
+       int tSum=0;
+       int sum=0;
+       for(int i=0;i<n;i++)tSum+=nums[i];
+       if(tSum<x)return -1;
+       if(tSum==x)return n;
+       tSum-=x;
+       int s=0;
+       int e=0;
+       int len=0;
+       while(e<n){
+           sum+=nums[e];
+           while(sum>tSum){
+               sum=sum-nums[s];
+               s++;
+           }
+           if(sum==tSum){
+             len=Math.max(len,(e-s+1));
+           }
+           e++;
+       }
+       if(len==0)return -1;
+       return n-len;
     }
 }
