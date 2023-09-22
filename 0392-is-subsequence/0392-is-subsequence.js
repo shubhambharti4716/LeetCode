@@ -4,23 +4,15 @@
  * @return {boolean}
  */
 var isSubsequence = function(s, t) {
+    let sPointer = 0;
+  let tPointer = 0;
 
-    let count=0
-    let stack=0
-    for(let j=0;j<s.length;j++){
-        for(let i=count;i<t.length;i++){
-            if(s[j]===t[i]){    
-                count++
-                stack++
-                break
-            }
-            count++
-        }
+  while (sPointer < s.length && tPointer < t.length) {
+    if (s[sPointer] === t[tPointer]) {
+      sPointer++;
     }
-    if(stack===s.length){
-        return true
-    }else{
-        return false
-    }
+    tPointer++;
+  }
 
+  return sPointer === s.length;
 };
