@@ -1,32 +1,28 @@
 class Solution {
     public String removeDuplicateLetters(String s) {
-        int dp[] = new int[26];
-        for (char c : s.toCharArray()) {
-            dp[c - 'a']++;
-        }
-        Stack<Character> stack = new Stack<>();
-        boolean visited[] = new boolean[26];
-        for (char c : s.toCharArray()) {
-            dp[c - 'a']--;
+        boolean[] vis = new boolean[26];
+        StringBuilder sb = new StringBuilder();
+        int count[] = new int[26];
 
-            if (visited[c - 'a']) {
-                continue;
+        for (char c : s.toCharArray()) {
+            if (c >= 'a' && c <= 'z') {
+                count[c - 'a']++;
             }
+        }
 
-            while (!stack.isEmpty() && c < stack.peek()) {
-                if (dp[stack.peek() - 'a'] > 0) {
-                    visited[stack.pop() - 'a'] = false;
-                } else {
-                    break;
+        for (char c : s.toCharArray()) {
+            if (c >= 'a' && c <= 'z') {
+                count[c - 'a']--;
+                if (vis[c - 'a']) continue;
+
+                while (sb.length() > 0 && c < sb.charAt(sb.length() - 1) && count[sb.charAt(sb.length() - 1) - 'a'] > 0) {
+                    vis[sb.charAt(sb.length() - 1) - 'a'] = false;
+                    sb.deleteCharAt(sb.length() - 1);
                 }
+                vis[c - 'a'] = true;
+                sb.append(c);
             }
-            visited[c - 'a'] = true;
-            stack.push(c);
         }
-        StringBuilder str = new StringBuilder();
-        for (char c : stack) {
-            str.append(c);
-        }
-        return str.toString();
+        return sb.toString();
     }
 }
