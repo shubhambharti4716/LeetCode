@@ -4,29 +4,22 @@
  * @return {string}
  */
 var decodeAtIndex = function(s, k) {
-    let length = 0;
-    let i = 0;
+    let size = BigInt(0);
 
-    while (length < k) {
-        if (!isNaN(s[i])) {
-            length *= Number(s[i]);
-        } else {
-            length++;
-        }
-        i++;
-    }
+	for (let index = 0; index < s.length; index++) {
+		const c = s[index];
 
-    for (let j = i - 1; j >= 0; j--) {
-        if (!isNaN(s[j])) {
-            length /= Number(s[j]);
-            k %= length;
-        } else {
-            if (k === 0 || k === length) {
-                return s[j];
-            }
-            length--;
-        }
-    }
+		size = isNaN(c) ? size + BigInt(1) : size * BigInt(c);
+	}
 
-    return "";
+	for (let index = s.length - 1; index >= 0; index--) {
+		const c = s[index];
+		const isNumber = !isNaN(c);
+
+		k = BigInt(k) % size;
+		if (k === 0n && !isNumber) return c;
+
+		size = isNumber ? size / BigInt(c) : size - BigInt(1);
+	}
+	return '';
 };
