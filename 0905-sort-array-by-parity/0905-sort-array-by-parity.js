@@ -3,16 +3,18 @@
  * @return {number[]}
  */
 var sortArrayByParity = function(nums) {
-    let i = 0, j = nums.length - 1;
-    
-    while (i < j) {
-        while (i < j && nums[i] % 2 === 0)
-            i++;
-        while (i < j && nums[j] % 2 === 1)
-            j--;
-        
-        [nums[i], nums[j]] = [nums[j], nums[i]];
+    const length = nums.length;
+    let left = 0, right = length - 1;
+    if (length <= 1) return nums;
+    while (left < right) {
+        if (nums[right] % 2 === 0) {
+            let temp = nums[right];
+            nums[right] = nums[left];
+            nums[left] = temp;
+            left++;
+        } else {
+            right--;    
+        }
     }
-    
     return nums;
 };
