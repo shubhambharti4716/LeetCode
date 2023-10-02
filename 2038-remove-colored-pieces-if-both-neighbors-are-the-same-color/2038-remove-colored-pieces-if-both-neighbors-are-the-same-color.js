@@ -3,26 +3,26 @@
  * @return {boolean}
  */
 var winnerOfGame = function(colors) {
-        let alice_plays = 0, bob_plays = 0, count = 0;
-        
-        for (let i = 1; i < colors.length; i++) {
-            if (colors[i] == colors[i - 1]) {
-                count++;
-            } else {
-                if (colors[i - 1] == 'A') {
-                    alice_plays += Math.max(0, count - 1);
-                } else {
-                    bob_plays += Math.max(0, count - 1);
-                }
-                count = 0;
-            }
+    let countA = 0;
+    let countB = 0;
+
+    for (let i = 0; i < colors.length; i++) {
+        const x = colors[i];
+        let count = 0;
+
+        while (i < colors.length && colors[i] === x) {
+            i++;
+            count++;
         }
 
-        if (colors.charAt(colors.length - 1) == 'A') {
-            alice_plays += Math.max(0, count - 1);
-        } else {
-            bob_plays += Math.max(0, count - 1);
+        if (x === 'A') {
+            countA += Math.max(count - 2, 0);
+        } else if (x === 'B') {
+            countB += Math.max(count - 2, 0);
         }
-        
-        return alice_plays > bob_plays;
+
+        i--;
     }
+
+    return countA > countB;
+};
