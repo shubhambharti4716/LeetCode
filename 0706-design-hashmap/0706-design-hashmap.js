@@ -1,60 +1,38 @@
-class MyHashMap {
-    constructor() {
-        this.size = 10;
-        this.mp = new Array(this.size).fill(null).map(() => []);
-    }
 
-    hash(key) {
-        return key % this.size;
-    }
+var MyHashMap = function() {
+    this.map = new Map()
+};
 
-    put(key, value) {
-        const i = this.hash(key);
-        const bucket = this.mp[i];
+/** 
+ * @param {number} key 
+ * @param {number} value
+ * @return {void}
+ */
+MyHashMap.prototype.put = function(key, value) {
+    this.map.set(key, value)
+};
 
-        for (let j = 0; j < bucket.length; j++) {
-            if (bucket[j][0] === key) {
-                bucket[j][1] = value;
-                return;
-            }
-        }
+/** 
+ * @param {number} key
+ * @return {number}
+ */
+MyHashMap.prototype.get = function(key) {
+   if (this.map.get(key) !== undefined) return this.map.get(key);
+   return -1
+};
 
-        bucket.push([key, value]);
-    }
+/** 
+ * @param {number} key
+ * @return {void}
+ */
+MyHashMap.prototype.remove = function(key) {
+    this.map.delete(key)
+};
 
-    get(key) {
-        const i = this.hash(key);
-        const bucket = this.mp[i];
-
-        for (let j = 0; j < bucket.length; j++) {
-            if (bucket[j][0] === key) {
-                return bucket[j][1];
-            }
-        }
-
-        return -1;
-    }
-
-    remove(key) {
-        const i = this.hash(key);
-        const bucket = this.mp[i];
-
-        for (let j = 0; j < bucket.length; j++) {
-            if (bucket[j][0] === key) {
-                bucket.splice(j, 1);
-                return;
-            }
-        }
-    }
-}
-
-// Usage
-const hashMap = new MyHashMap();
-hashMap.put(1, 1);
-hashMap.put(2, 2);
-console.log(hashMap.get(1)); // Output: 1
-console.log(hashMap.get(3)); // Output: -1
-hashMap.put(2, 1);
-console.log(hashMap.get(2)); // Output: 1
-hashMap.remove(2);
-console.log(hashMap.get(2)); // Output: -1
+/** 
+ * Your MyHashMap object will be instantiated and called as such:
+ * var obj = new MyHashMap()
+ * obj.put(key,value)
+ * var param_2 = obj.get(key)
+ * obj.remove(key)
+ */
