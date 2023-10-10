@@ -2,21 +2,18 @@
  * @param {number[]} nums
  * @return {number}
  */
-const minOperations = function(nums) {
-    const n = nums.length;
-    nums = [...new Set(nums)].sort((a, b) => a - b);
+var minOperations = function(nums) {
+    let n = nums.length, res = n;
+    const numsU = Array.from(new Set(nums));
+    let m = numsU.length;
+    numsU.sort((a, b) => a - b);
 
-    let ans = 0, j = 0;
-    const len = nums.length;
-
-    for (let i = 0; i < len; ++i) {
-        if (nums[i] - nums[j] >= n) {
+    for(let i = 0, j = 0; i < m; ++i) {
+        while(j < m && numsU[j] < numsU[i] + n) {
             ++j;
         }
-        if (i - j + 1 > ans) {
-            ans = i - j + 1;
-        }
+        res = Math.min(res, n - j + i);
     }
 
-    return n - ans;
+    return res;
 };
