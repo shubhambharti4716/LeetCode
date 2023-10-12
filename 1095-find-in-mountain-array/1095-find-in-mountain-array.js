@@ -21,60 +21,53 @@
  * @return {number}
  */
 var findInMountainArray = function(target, mountainArr) {
-    let peakIndex = peak(mountainArr); 
-        // Getting the index of peak element.
+    let start2 = 0;
+    let end2 = mountainArr.length() - 1;
+    let mid;
 
-    let first = search(mountainArr, target, 0, peakIndex);
-        // Binary search left side of the array.
+    while(start2 < end2){
+        mid = parseInt(start2 + (end2 - start2) / 2);
 
-    if(first != -1) { 
-        // If the answer is found return the index
-        return first;
-    }
-
-    return search(mountainArr, target, peakIndex+1, mountainArr.length()-1);
-        // Binary search the right side of array.
-
-
-function peak(nums) {
-    let l = 0;
-    let r = nums.length()-1;
-    while(l<r) {
-        mid = Math.floor(l+(r-l)/2);
-        if(nums.get(mid)>nums.get(mid+1)){
-            // answer lies in the left of mid
-            r = mid;
-        }else {
-            // answer lies in the right of mid
-            l = mid+1;
-        }
-    }
-    return l;
-};
-    
-    
-function search(arr, target, l, r) {
-    isAsc = arr.get(l)<arr.get(r); 
-        // check if it's increasing or decreasing side of array.
-
-    // ---- Binary Search ----
-    while (l<=r) {
-        mid = Math.floor(l+(r-l)/2);
-        if(arr.get(mid)==target) return mid;
-        if(isAsc){
-            if(target<arr.get(mid)){
-                r = mid-1;
-            } else {
-                l = mid+1;
-            }
+        if(mountainArr.get(mid) > mountainArr.get(mid + 1)){
+            end2 = mid;
         } else {
-            if(target<arr.get(mid)){
-                l = mid+1;
-            } else {
-                r = mid-1;
-            }
+            start2 = mid + 1
         }
     }
-    return -1;
-}   
+
+    let start1 = 0;
+    let end1 = start2 - 1;
+    end2 = mountainArr.length() - 1;
+
+    const result1 =  binarySearch(mountainArr, start1, end1, target)
+    const result2 =  binarySearch(mountainArr, start2, end2, target)
+
+    return result1 !== -1 ? result1 : result2;
+
+    function binarySearch(arr, start, end, target){
+        const isDec = arr.get(start) > arr.get(end);
+        let mid;
+
+        while(start <= end){
+            
+            mid = parseInt(start + (end - start) / 2);
+
+            if(arr.get(mid) < target) {
+                if(isDec){
+                    end = mid - 1
+                } else {
+                    start = mid + 1
+                }
+            } else if (arr.get(mid) > target) {
+                if(isDec){
+                    start = mid + 1
+                } else {
+                    end = mid - 1
+                }
+            } else {
+                return mid
+            }
+        }
+        return -1;
+    }
 };
