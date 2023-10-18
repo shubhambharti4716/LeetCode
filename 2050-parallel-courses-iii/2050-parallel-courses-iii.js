@@ -5,33 +5,36 @@
  * @return {number}
  */
 var minimumTime = function(n, relations, time) {
-    const cnt = Array(n+1).fill(0);
-    const edges = Array(n+1).fill(null).map(() => []);
-    for (const [p,n] of relations) {
-        cnt[n]++;
-        edges[p].push(n);
+    const adjList = new Array(n + 1)
+    const inDegree = new Array(n + 1).fill(0)
+    const costs = new Array(n + 1).fill(0)
+    for (let i = 0; i <= n; i++) {
+        adjList[i] = [];
     }
-    const q = [];
-    let fr = -1, re= -1;
-    const T = Array(n+1).fill(0);
-    for (let i = 1; i <= n ; i++) {
-        if (!cnt[i]) {
-            q[++re] = i;
-            T[i] = time[i-1];
+    for (const [from, to] of relations) {
+        inDegree[to] += 1
+        adjList[from].push(to)
+    }
+    const q = []
+    for (let i = 1; i <= n; i++) {
+        if (inDegree[i] === 0) {
+            costs[i] = time[i - 1]
+            q.push(i) 
         }
     }
 
-    let ans = 0;
-    while (fr < re) {
-        const c = q[++fr];
-        ans = Math.max(ans, T[c]);
-        for (const n of edges[c]) {
-            cnt[n]--;
-            T[n] = Math.max(T[n], T[c] + time[n-1])
-            if (!cnt[n]) {
-                q[++re] = n;
+    while(q.length) {
+        const u = q.shift();
+        const cost = costs[u]
+        const list = adjList[u] || []
+        for (const v of list) {
+            inDegree[v] -= 1
+            costs[v] = Math.max(costs[v], cost)
+            if (inDegree[v] === 0) {
+                costs[v] += time[v - 1]
+                q.push(v)
             }
         }
     }
-    return ans;
+    return Math.max(...costs)
 };
