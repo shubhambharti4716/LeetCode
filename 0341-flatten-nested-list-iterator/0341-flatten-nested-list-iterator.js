@@ -29,31 +29,32 @@
  * @param {NestedInteger[]} nestedList
  */
 var NestedIterator = function(nestedList) {
-    this.currentIndex = 0;
-
-    const flattenArray = [];
-    const stack = [...nestedList];
-
-    while (stack.length) {
-        const value = stack.pop();
-
-        if (value.isInteger()) {
-            flattenArray.push(value.getInteger());
-        } else {
-            stack.push(...value.getList());
-        }
+    this.stack = [];
+    // Push elements in reverse order to simulate stack behavior
+    for (let i = nestedList.length - 1; i >= 0; i--) {
+        this.stack.push(nestedList[i]);
     }
-
-    this.nestedList = flattenArray.reverse();
 };
-
 
 /**
  * @this NestedIterator
  * @returns {boolean}
  */
 NestedIterator.prototype.hasNext = function() {
-    return this.currentIndex < this.nestedList.length;
+    while (this.stack.length > 0) {
+        const top = this.stack[this.stack.length - 1];
+        if (top.getInteger() !== null) {
+            return true;
+        }
+        
+        // Flatten the list
+        this.stack.pop();
+        const list = top.getList();
+        for (let i = list.length - 1; i >= 0; i--) {
+            this.stack.push(list[i]);
+        }
+    }
+    return false;
 };
 
 /**
@@ -61,12 +62,10 @@ NestedIterator.prototype.hasNext = function() {
  * @returns {integer}
  */
 NestedIterator.prototype.next = function() {
-    const currentValue = this.nestedList[this.currentIndex];
-    this.currentIndex++;
-    return currentValue;
+    if (this.hasNext()) {
+        return this.stack.pop().getInteger();
+    }
 };
-
-
 /**
  * Your NestedIterator will be called like this:
  * var i = new NestedIterator(nestedList), a = [];
