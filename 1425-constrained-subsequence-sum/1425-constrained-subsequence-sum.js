@@ -3,19 +3,31 @@
  * @param {number} k
  * @return {number}
  */
+
+ // j-i <= k 
 var constrainedSubsetSum = function(nums, k) {
-        let dq = [];
-        for (let i = 0; i < nums.length; i++) {
-            nums[i] += dq.length > 0 ? nums[dq[0]] : 0;
-
-            while (dq.length > 0 && (i - dq[0] >= k || nums[i] >= nums[dq[dq.length - 1]])) {
-                if (nums[i] >= nums[dq[dq.length - 1]]) dq.pop();
-                else dq.shift();
-            }
-
-            if (nums[i] > 0) {
-                dq.push(i);
-            }
+     const n = nums.length;
+    const dp = new Array(n);
+    const deque = [];
+    
+    dp[0] = nums[0];
+    deque.push(0);
+    
+    for (let i = 1; i < n; i++) {
+     
+        while (deque.length && i - deque[0] > k) {
+            deque.shift();
         }
-        return Math.max(...nums);
+        
+        dp[i] = Math.max(nums[i], nums[i] + dp[deque[0]]);
+        
+
+        while (deque.length && dp[i] >= dp[deque[deque.length - 1]]) {
+            deque.pop();
+        }
+        
+        deque.push(i);
     }
+    
+    return Math.max(...dp);
+};
