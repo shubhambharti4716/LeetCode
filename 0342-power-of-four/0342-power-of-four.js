@@ -3,6 +3,14 @@
  * @return {boolean}
  */
 var isPowerOfFour = function(n) {
-    let mask = 0x55555555;
-    return n > 0 && (n & (n - 1)) === 0 && (n & mask) === n;
+    let res = false
+  let count = 1
+  for (let i = 0; i < 100; i++) {
+   if(n == count) {
+    res = true
+    break
+  }
+   count *=  4
+  }
+  return res
 };
