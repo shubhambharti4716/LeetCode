@@ -11,30 +11,14 @@
  * @return {number[]}
  */
 var largestValues = function(root) {
-    if (!root) {
-        return [];
+        let res = [];
+    if(!root) return res;
+    function trav(node, level){
+        if(!node) return;
+        if(res[level] == undefined || res[level] < node.val ) res[level] =node.val;
+        if(node.left) trav(node.left, level+1);
+        if(node.right) trav(node.right, level+1);
     }
-    
-    let queue = [root];
-    let temp = [];
-    let level = 0;
-    const max = [];
-    
-    while (queue.length) {
-        const el = queue.shift();
-        
-        temp.push(...[el.left, el.right].filter(Boolean));
-
-        if (el.val > (max[level] ?? -Infinity)) {
-            max[level] = el.val;
-        }
-        
-        if (!queue.length) {
-            level++;
-            queue = temp;
-            temp = [];
-        }
-   }
-    
-    return max;
+    trav(root, 0);
+    return res;
 };
