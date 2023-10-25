@@ -5,12 +5,14 @@
  */
 var kthGrammar = function(n, k) {
     if (n === 1) {
-        return 0;
+        return 0; // Base case: when n is 1, there's only one symbol, which is 0.
     }
-    const parent = kthGrammar(n - 1, Math.floor((k + 1) / 2));
-    if (k % 2 === 0) {
-        return parent === 1 ? 0 : 1;
+
+    const mid = Math.pow(2, n - 2); // Calculate the midpoint of the previous row.
+
+    if (k <= mid) {
+        return kthGrammar(n - 1, k); // Recurse on the previous row if k is in the left half.
     } else {
-        return parent;
+        return 1 - kthGrammar(n - 1, k - mid); // Recurse on the previous row with k adjusted for the right half.
     }
 };
