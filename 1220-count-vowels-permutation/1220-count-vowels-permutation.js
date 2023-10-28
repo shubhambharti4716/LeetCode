@@ -3,25 +3,20 @@
  * @return {number}
  */
 var countVowelPermutation = function(n) {
-      const modVal = (1e9 + 7);
-   let a = 1;
-   let e = 1;
-   let i = 1;
-   let o = 1;
-   let u = 1;
-
-   for (let x = 1; x < n; x++) {
-      let tempA = e % modVal;
-      let tempE = (a + i) % modVal;
-      let tempI = (a + e + o + u) % modVal;
-      let tempO = (i + u) % modVal;
-      let tempU = a % modVal;
-      a = tempA;
-      e = tempE;
-      i = tempI;
-      o = tempO;
-      u = tempU;
-   }
-
-   return (a + e + i + o + u) % modVal;
+    let aCount = 1, eCount = 1, iCount = 1, oCount = 1, uCount = 1;
+    const MOD = 1000000007; 
+    for (let i = 1; i < n; i++) {
+        const aCountNew = (eCount + iCount + uCount) % MOD;
+        const eCountNew = (aCount + iCount) % MOD;
+        const iCountNew = (eCount + oCount) % MOD;
+        const oCountNew = (iCount) % MOD;
+        const uCountNew = (iCount + oCount) % MOD;
+        aCount = aCountNew;
+        eCount = eCountNew;
+        iCount = iCountNew;
+        oCount = oCountNew;
+        uCount = uCountNew;
+    }
+    const result = (aCount + eCount + iCount + oCount + uCount)  % MOD;
+    return result;
 };
