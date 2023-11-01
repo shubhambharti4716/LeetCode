@@ -1,61 +1,56 @@
 /**
  * Definition for a binary tree node.
  * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
+ *     this.val = (val === undefined ? 0 : val);
+ *     this.left = (left === undefined ? null : left);
+ *     this.right = (right === undefined ? null : right);
  * }
  */
+
 /**
  * @param {TreeNode} root
  * @return {number[]}
  */
-
-const inorder = (root, arr) => {
-    if(!root){
-        return;
-    }
-
-    inorder(root.left, arr);
-    arr.push(root.val);
-    inorder(root.right, arr);
-}
-
-const mostFrequent = (arr, n) => 
-{ 
-    var hash = new Map(); 
-    for (var i = 0; i < n; i++) 
-    { 
-        if(hash.has(arr[i])) 
-            hash.set(arr[i], hash.get(arr[i])+1) 
-        else
-            hash.set(arr[i], 1) 
-    } 
-  
-    let max_count = 0; 
-    hash.forEach((value) => {    
-        if (max_count < value) { 
-            max_count = value; 
-        } 
-  
-    }); 
-
-    let result = [];
-    hash.forEach((value,key) => {    
-        if (max_count === value) { 
-            result.push(key)
-        } 
-  
-    }); 
-  
-    return result; 
-} 
-
 var findMode = function(root) {
-    const inorderArr =[];
-    inorder(root, inorderArr);
+    if (!root) return [];
 
-    // console.log(inorderArr);
+    // Initialize variables to track mode(s)
+    let maxFreq = 0;
+    let currentVal = null;
+    let currentFreq = 0;
 
-    return mostFrequent(inorderArr, inorderArr.length)
+    // Variables to store the result
+    let modes = [];
+
+    // Helper function for in-order traversal
+    const traverse = (node) => {
+        if (!node) return;
+
+        // Visit left subtree
+        traverse(node.left);
+
+        // Process current node
+        if (node.val === currentVal) {
+            currentFreq++;
+        } else {
+            currentVal = node.val;
+            currentFreq = 1;
+        }
+
+        // Update max frequency and modes
+        if (currentFreq === maxFreq) {
+            modes.push(currentVal);
+        } else if (currentFreq > maxFreq) {
+            maxFreq = currentFreq;
+            modes = [currentVal];
+        }
+
+        // Visit right subtree
+        traverse(node.right);
+    };
+
+    // Start in-order traversal
+    traverse(root);
+
+    return modes;
 };
