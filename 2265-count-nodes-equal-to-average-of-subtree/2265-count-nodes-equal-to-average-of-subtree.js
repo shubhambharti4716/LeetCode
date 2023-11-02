@@ -11,24 +11,23 @@
  * @return {number}
  */
 var averageOfSubtree = function(root) {
-    var res = 0;
+  let result = 0;
 
-    var postorder = function(node) {
-        if (!node) {
-            return [0, 0]; // sum, number of nodes
-        }
+  const traverse = (node) => {
+    let count = 0;
+    let sum = 0;
 
-        var left = postorder(node.left);
-        var right = postorder(node.right);
+    if (!node) return [0,0];
+    const [leftSum, leftCount] = traverse(node.left);
+    const [rightSum, rightCount] = traverse(node.right);
+    sum += leftSum + rightSum + node.val
+    count += leftCount + rightCount + 1;
 
-        var totalSum = left[0] + right[0] + node.val;
-        var totalCount = 1 + left[1] + right[1];
-        res += node.val === Math.floor(totalSum / totalCount);
+    if (Math.floor(sum / count) === node.val) result += 1
 
-        return [totalSum, totalCount];
-    };
+    return [sum, count]
+  }
 
-    postorder(root);
-
-    return res;
-};
+  traverse(root)
+  return result;
+}
