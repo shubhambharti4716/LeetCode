@@ -1,25 +1,28 @@
-public class SeatManager {
-    private int last;
-    private PriorityQueue<Integer> pq;
+class SeatManager {
+
+    boolean[] isSeatReserved;
+    int nextSeat = 1;
+
+    TreeSet<Integer> unreservedSeats = new TreeSet<>();
 
     public SeatManager(int n) {
-        this.last = 0;
-        this.pq = new PriorityQueue<>();
+        isSeatReserved = new boolean[n+1];
     }
 
     public int reserve() {
-        if (pq.isEmpty()) {
-            return ++last;
+        int seat;
+        if (unreservedSeats.isEmpty()) {
+            seat = nextSeat;
+            nextSeat++;
         } else {
-            return pq.poll();
+            seat = unreservedSeats.first();
+            unreservedSeats.remove(seat);
         }
+        return seat;
     }
 
     public void unreserve(int seatNumber) {
-        if (seatNumber == last) {
-            --last;
-        } else {
-            pq.offer(seatNumber);
-        }
+        isSeatReserved[seatNumber] = false;
+        unreservedSeats.add(seatNumber);
     }
 }
