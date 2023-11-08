@@ -6,20 +6,12 @@
  * @param {number} t
  * @return {boolean}
  */
-var isReachableAtTime = function(sx, sy, fx, fy, t) {
-    let distx = Math.abs(sx - fx);
-    let disty = Math.abs(sy - fy);
-
-    if (distx === 0 && disty === 0 && t === 1) {
-        return false;
-    }
-
-    // Calculate the minimum time needed based on Manhattan distance
-    let minTimeNeeded = Math.min(distx, disty);
-    distx -= minTimeNeeded;
-    disty -= minTimeNeeded;
-
-    minTimeNeeded += Math.max(distx, disty);
-
-    return minTimeNeeded <= t; 
+var isReachableAtTime = function (sx, sy, fx, fy, t) {
+  if (sx === fx && sy === fy) {
+    if (t === 1) return false;
+    return true;
+  }
+  let max = Math.max(Math.abs(sx - fx), Math.abs(sy - fy));
+  if (max <= t) return true;
+  return false;
 };
