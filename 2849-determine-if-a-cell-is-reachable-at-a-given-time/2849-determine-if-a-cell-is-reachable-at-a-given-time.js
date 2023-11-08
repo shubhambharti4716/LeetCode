@@ -1,32 +1,25 @@
-var isReachableAtTime = function(startX, startY, targetX, targetY, time) {
-    // Check if the starting point is the same as the target point.
-    if (startX === targetX && startY === targetY) {
-        // If they are the same, check if time is 1, and return false (impossible to stay at the same cell for 1 second).
-        if (time === 1) {
-            return false;
-        }
+/**
+ * @param {number} sx
+ * @param {number} sy
+ * @param {number} fx
+ * @param {number} fy
+ * @param {number} t
+ * @return {boolean}
+ */
+var isReachableAtTime = function(sx, sy, fx, fy, t) {
+    let distx = Math.abs(sx - fx);
+    let disty = Math.abs(sy - fy);
+
+    if (distx === 0 && disty === 0 && t === 1) {
+        return false;
     }
-    
-    // Calculate the absolute differences in x and y coordinates between the starting and target points.
-    let xDifference = startX - targetX;
-    let yDifference = startY - targetY;
-    
-    // Ensure that xDifference and yDifference are non-negative.
-    if (xDifference < 0) {
-        xDifference = -xDifference;
-    }
-    if (yDifference < 0) {
-        yDifference = -yDifference;
-    }
-    
-    // Calculate the maximum difference between xDifference and yDifference.
-    let maxDifference = Math.max(xDifference, yDifference);
-    
-    // Check if the maximum difference is less than or equal to the given time.
-    if (maxDifference <= time) {
-        return true; // It's possible to reach the target within the specified time.
-    }
-    
-    // If the maximum difference is greater than the given time, return false.
-    return false;
-}
+
+    // Calculate the minimum time needed based on Manhattan distance
+    let minTimeNeeded = Math.min(distx, disty);
+    distx -= minTimeNeeded;
+    disty -= minTimeNeeded;
+
+    minTimeNeeded += Math.max(distx, disty);
+
+    return minTimeNeeded <= t; 
+};
