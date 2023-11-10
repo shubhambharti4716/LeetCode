@@ -1,38 +1,36 @@
 class Solution {
-    public int[] restoreArray(int[][] adjacentPairs) {
-        /* For each number, record its neighbours using a hash map. 
-        The number with only one neighbour is the head (or the tail) of the list.
-        The number in the middle of the array have two neighbors in the adjacentPairs.
-        */
+  public int[] restoreArray(int[][] adjacentPairs) {
+    int[] ans = new int[adjacentPairs.length + 1];
+    int i = 0; // ans's index
+    Map<Integer, List<Integer>> numToAdjs = new HashMap<>();
 
-        Map<Integer, List<Integer>> num2Neighbors = new HashMap<>();
-        for(int[] adj : adjacentPairs) {
-            num2Neighbors.putIfAbsent(adj[0], new ArrayList<>());
-            num2Neighbors.putIfAbsent(adj[1], new ArrayList<>());
-            num2Neighbors.get(adj[0]).add(adj[1]);
-            num2Neighbors.get(adj[1]).add(adj[0]);
-        }
-
-        int start = 0;
-        for(int num: num2Neighbors.keySet()) {
-            if (num2Neighbors.get(num).size() == 1) {
-                start = num;
-                break;
-            }
-        }
-
-        int[] resArr = new int[adjacentPairs.length+1]; 
-        resArr[0] = start;
-        resArr[1] = num2Neighbors.get(start).get(0);
-        for(int i=2; i<resArr.length; i++) {
-            List<Integer> neighbors = num2Neighbors.get(resArr[i-1]);
-            int prevNum = resArr[i-2];
-            if (neighbors.get(0) != prevNum) {
-                resArr[i] = neighbors.get(0);
-            } else {
-                resArr[i] = neighbors.get(1);
-            }
-        }
-        return resArr;
+    for (int[] pair : adjacentPairs) {
+      numToAdjs.putIfAbsent(pair[0], new ArrayList<>());
+      numToAdjs.putIfAbsent(pair[1], new ArrayList<>());
+      numToAdjs.get(pair[0]).add(pair[1]);
+      numToAdjs.get(pair[1]).add(pair[0]);
     }
+
+    for (Map.Entry<Integer, List<Integer>> entry : numToAdjs.entrySet())
+    {
+        if (entry.getValue().size() == 1) 
+        {
+            ans[i++] = entry.getKey();
+            ans[i++] = entry.getValue().get(0);
+            break;
+        }
+    }      
+
+    while (i < adjacentPairs.length + 1) {
+      final int tail = ans[i - 1];
+      final int prev = ans[i - 2];
+      List<Integer> adjs = numToAdjs.get(tail);
+      if (adjs.get(0) == prev)
+        ans[i++] = adjs.get(1);
+      else
+        ans[i++] = adjs.get(0);
+    }
+
+    return ans;
+  }
 }
