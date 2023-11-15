@@ -2,18 +2,14 @@
  * @param {number[]} arr
  * @return {number}
  */
-var maximumElementAfterDecrementingAndRearranging = function(arr) {
-    const l = arr.length;
-    const counter = new Array(l).fill(0);
-
-    for (let i = 0; i < l; ++i) {
-        counter[Math.min(arr[i] - 1, l - 1)] += 1;
+var maximumElementAfterDecrementingAndRearranging = function(arr) 
+{
+    if (!arr.length) return 0
+    arr.sort((a, b) => a - b)
+    arr[0] = 1
+    for (let i = 1; i < arr.length; i++) 
+    {
+        if (Math.abs(arr[i] - arr[i - 1]) > 1) arr[i] = arr[i - 1] + 1
     }
-
-    let ans = 1;
-    for (let i = 1; i < l; ++i) {
-        ans = Math.min(i + 1, ans + counter[i]);
-    }
-
-    return ans;
+    return arr.at(-1)
 };
