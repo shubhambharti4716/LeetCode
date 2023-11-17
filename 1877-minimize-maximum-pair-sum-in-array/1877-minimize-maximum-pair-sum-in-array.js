@@ -2,19 +2,18 @@
  * @param {number[]} nums
  * @return {number}
  */
-var minPairSum = function(arr) {
-    arr.sort((a, b) => a - b);
-    
-    let res = 0;
-    let i = 0;
-    let j = arr.length - 1;
-
-    while(i <= j) {
-        res = Math.max(res, arr[i] + arr[j]);
-        i += 1;
-        j -= 1;
+var minPairSum = function(nums) {
+    nums.sort( (a,b) => a-b);
+    let maximum = 0;
+    let start =0;
+    let end = nums.length-1;
+    while(start < end){
+        let sum = nums[start] + nums[end];
+        if(maximum < sum){
+            maximum =sum;
+        }
+        start++;
+        end--;
     }
-        
-
-    return res;
+    return maximum;
 };
