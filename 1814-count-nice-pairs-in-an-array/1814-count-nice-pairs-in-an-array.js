@@ -2,32 +2,41 @@
  * @param {number[]} nums
  * @return {number}
  */
-var countNicePairs = function(nums) {
-    function reverse(num) {
-        let rev = 0;
-        while (num > 0) {
-            rev = rev * 10 + num % 10;
-            num = Math.floor(num / 10);
-        }
-        return rev;
+function countNicePairs(nums) 
+{
+    const counts = new Map();
+    
+    for (const num of nums) 
+    {
+        const rev = reverse(num);
+        const diff = rev - num;
+        
+        const count = counts.get(diff);
+        
+        counts.set(diff, count ? count + 1 : 1);
     }
-
-    const mod = 1000000007;
-
-    nums = nums.map(num => num - reverse(num));
-    nums.sort((a, b) => a - b);
-
-    let res = 0;
-    let i = 0;
-    while (i < nums.length - 1) {
-        let cont = 1;
-        while (i < nums.length - 1 && nums[i] === nums[i + 1]) {
-            cont++;
-            i++;
-        }
-        res = (res % mod + (cont * (cont - 1)) / 2) % mod;
-        i++;
+    
+    let sum = 0;
+    
+    for (const [key, value] of counts) 
+    {
+        sum += (value - 1) * value / 2;
     }
+    
+    return sum % 1000000007;
+}
 
-    return Math.floor(res % mod);
-};
+function reverse(num) 
+{
+    let n = 0;
+    
+    while (num > 0) 
+    {
+        const modulo = num % 10;
+        
+        n = n * 10 + modulo;
+        num = (num - modulo) / 10;
+    }
+    
+    return n;
+}
