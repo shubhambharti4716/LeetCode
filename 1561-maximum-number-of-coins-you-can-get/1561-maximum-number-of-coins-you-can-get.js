@@ -3,12 +3,13 @@
  * @return {number}
  */
 var maxCoins = function(piles) {
-    piles.sort((a, b) => a - b);
-    let res = 0;
+    piles.sort((a, b) => b - a)
+    let total = 0, count = piles.length / 3, index = 1
 
-    for (let i = Math.floor(piles.length / 3); i < piles.length; i += 2) {
-        res += piles[i];
+    while (count-- > 0) {
+        total += piles[index]
+        index += 2
     }
-
-    return res;    
+    
+    return total
 };
