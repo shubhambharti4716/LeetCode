@@ -3,15 +3,18 @@
  * @return {number[]}
  */
 var getSumAbsoluteDifferences = function(nums) {
-    let totalSum = nums.reduce((sum, n) => sum + n, 0);
-    let left = 0, right = totalSum;
-    let result = [];
-
-    for (let i = 0; i < nums.length; i++) {
-        right -= nums[i];
-        result.push(nums[i] * i - left + right - nums[i] * (nums.length - i - 1));
-        left += nums[i];
+    let n = nums.length;
+    let arr = new Array(n);
+    let leftSum = new Array(n).fill(0);
+    let rightSum = new Array(n).fill(0);
+    leftSum[0] = 0;
+    rightSum[n-1] = 0;
+    for(let i=1; i<n; i++) {
+        leftSum[i] = leftSum[i-1] + (nums[i] - nums[i-1]) * i;
+        rightSum[n-i-1] = rightSum[n-i] + (nums[n-i] - nums[n-i-1]) * i;
     }
-
-    return result;
+    for(let j=0; j<n; j++) {
+        arr[j] = leftSum[j] + rightSum[j];
+    }
+    return arr;
 };
