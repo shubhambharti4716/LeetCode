@@ -3,11 +3,24 @@
  * @return {string}
  */
 var largestGoodInteger = function(num) {
-    let result = -1;
-    for (let i = 0; i + 2 < num.length; i++) {
-        if (num[i] === num[i + 1] && num[i] === num[i + 2]) {
-            result = Math.max(result, parseInt(num[i]));
+    let a = 0, b = 1;
+    let max = 0;
+    let matchFound = false;
+    if(num.length < 3 )
+        return ""
+    while(a < b && b < num.length){
+        if(num[a] === num[b])
+            b++;
+        else{
+            a = b;
+            b++;
+        }
+        if(b - a > 2){
+            max = Math.max(max, num[a]);
+            matchFound = true;
         }
     }
-    return (result === -1) ? "" : String(result).repeat(3);
+    if(matchFound)
+        return `${max}${max}${max}`;
+    return ""
 };
