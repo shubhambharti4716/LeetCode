@@ -1,14 +1,18 @@
-/**
- * @param {number} n
- * @return {number}
- */
-var totalMoney = function(n) {
-    const week_count = Math.floor(n / 7);
-    const remaining_days = n % 7;
+function totalMoney(n) {
+    let totalMoney = 0;
+    let dailyDeposit = 1;
+    let mondayDeposit = 1;
     
-    let total = ((week_count * (week_count - 1)) / 2) * 7; 
-    total += week_count * 28;
-    total += ((remaining_days * (remaining_days + 1)) / 2) + (week_count * remaining_days);
+    for (let day = 1; day <= n; day++) {
+        totalMoney += dailyDeposit;
+        
+        if ((day % 7) !== 0) {
+            dailyDeposit++;
+        } else {
+            mondayDeposit++;
+            dailyDeposit = mondayDeposit;
+        }
+    }
     
-    return total;
-};
+    return totalMoney;
+}
