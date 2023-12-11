@@ -3,25 +3,17 @@
  * @return {number}
  */
 var findSpecialInteger = function(arr) {
-    let size = arr.length;
-    let qtr = Math.floor(size / 4);
-    let cnt = 1;
-    let p = arr[0];
+    if(arr.length === 1) return arr[0];
+    let count = 1;
+    for(let i = 0; i < arr.length; i++){
+        let int = arr[i];
+        if(int === arr[i+1]){
+            count = count + 1
+        } else count = 1
 
-    for (let i = 1; i < size; i++) {
-        if (p === arr[i]) {
-            cnt++;
-        } else {
-            cnt = 1;
+        if(count > arr.length/4 ){
+            return int
         }
-
-        if (cnt > qtr) {
-            return arr[i];
-        }
-
-        p = arr[i];
     }
-
-    return p;
-
+    
 };
