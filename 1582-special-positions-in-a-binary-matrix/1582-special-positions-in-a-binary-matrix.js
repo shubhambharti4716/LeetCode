@@ -3,34 +3,26 @@
  * @return {number}
  */
 var numSpecial = function(mat) {
+    for(let row=0; row<mat.length; row++){
+        let rowSum = 0;
+        let firstRowOne = [];
+        for(let col=0; col<mat[0].length; col++){
+            rowSum += mat[row][col];
+            if(mat[row][col] == 1) firstRowOne = [row, col];
+        }
+        
+        if(rowSum == 1) mat[firstRowOne[0]][firstRowOne[1]] = -1;
+    }
+    
     let specials = 0;
-
-    for (let i = 0; i < mat.length; i++) {
-        let index = checkRow(mat, i);
-        if (index >= 0 && checkColumn(mat, i, index))
-            specials++;
+    for(let col=0; col<mat[0].length; col++){
+        let countMinusOne = 0;
+        let countOne = 0;
+        for(let row=0; row<mat.length; row++){
+            if(mat[row][col] == -1) countMinusOne++;  
+            if(mat[row][col] == 1) countOne++;  
+        }   
+         if(countMinusOne == 1 && countOne == 0) specials++;
     }
-
     return specials;
-
-    function checkRow(mat, i) {
-        let index = -1;
-        for (let j = 0; j < mat[0].length; j++) {
-            if (mat[i][j] === 1) {
-                if (index >= 0)
-                    return -1;
-                else
-                    index = j;
-            }
-        }
-        return index;
-    }
-
-    function checkColumn(mat, i, index) {
-        for (let j = 0; j < mat.length; j++) {
-            if (mat[j][index] === 1 && j !== i)
-                return false;
-        }
-        return true;
-    }
 };
