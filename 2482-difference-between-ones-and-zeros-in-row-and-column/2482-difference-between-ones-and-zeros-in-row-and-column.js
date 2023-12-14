@@ -3,26 +3,22 @@
  * @return {number[][]}
  */
 var onesMinusZeros = function(grid) {
-    const m = grid.length;
-    const n = grid[0].length;
-
-    const rowOnes = new Array(m).fill(0);
-    const colOnes = new Array(n).fill(0);
-
-    // Count ones in each row and column
-    for (let i = 0; i < m; ++i) {
-        for (let j = 0; j < n; ++j) {
-            rowOnes[i] += grid[i][j];
-            colOnes[j] += grid[i][j];
+    let onesRow = new Array(grid.length).fill(0);
+    let onesCol = new Array(grid[0].length).fill(0);
+    const m = grid[0].length;
+    const n = grid.length;
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[0].length; j++) {
+            if (grid[i][j] != 1) continue;
+            onesRow[i]++;
+            onesCol[j]++;
         }
     }
 
-    // Calculate the difference matrix
-    for (let i = 0; i < m; ++i) {
-        for (let j = 0; j < n; ++j) {
-            grid[i][j] = 2 * (rowOnes[i] + colOnes[j]) - m - n;
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[0].length; j++) {
+            grid[i][j] = (2 * onesRow[i]) - m + (2 * onesCol[j]) - n;
         }
     }
-
     return grid;
 };
