@@ -3,20 +3,20 @@
  * @return {string}
  */
 var destCity = function(paths) {
-    const cities = new Set();
+    const pointers = {}
+    
+    paths.forEach(e => {
+        pointers[e[0]] = e[1]
 
-        // Collect outgoing cities
-        for (const path of paths) {
-            cities.add(path[0]);
-        }
+        if(pointers[e[1]] == null) pointers[e[1]] = false
+    })
 
-        // Find destination city with no outgoing path
-        for (const path of paths) {
-            const dest = path[1];
-            if (!cities.has(dest)) {
-                return dest;
-            }
-        }
+    let point = paths[0][1]
 
-        return "";
+    while(pointers[point])
+    {
+        point = pointers[point]
+    }
+
+    return point
 };
