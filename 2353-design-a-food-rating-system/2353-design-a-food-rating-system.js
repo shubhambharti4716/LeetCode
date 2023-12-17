@@ -1,50 +1,44 @@
-/*
- @param{string}name
- @param{string}cuisine
- @param{number}rating
- */
-function FoodData(name, cuisine, rating) {
-    this.name = name;
-    this.cuisine = cuisine;
-    this.rating = rating;
-}
-
-class FoodRatings {
-
-    constructor(foods, cuisines, ratings) {
-        //Map<string, FoodData>
-        this.foodNameToFoodData = new Map();
-        this.cuisineNameToHeapifiedFoodData = new Map();
-
-        for (let i = 0; i < foods.length; ++i) {
-            let currentFood = new FoodData(foods[i], cuisines[i], ratings[i]);
-            this.foodNameToFoodData.set(foods[i], currentFood);
-            if (!this.cuisineNameToHeapifiedFoodData.has(cuisines[i])) {
-                this.cuisineNameToHeapifiedFoodData.set(cuisines[i],
-                        new MaxPriorityQueue({compare: (x, y) => (x.rating === y.rating) ? x.name.localeCompare(y.name) : (y.rating - x.rating)}));
-            }
-            this.cuisineNameToHeapifiedFoodData.get(cuisines[i]).enqueue(currentFood);
-        }
+var FoodRatings = function (foods, cuisines, ratings) {
+  const map_c2fr_pq = new Map()
+  const map_f2c = new Map()
+  const map_f2r = new Map()
+  const n = foods.length
+  for (let i = 0; i < n; i++) {
+    const [food, cuisine, rating] = [foods[i], cuisines[i], ratings[i]]
+    if (!map_f2c.has(food)) {
+      map_f2c.set(food, cuisine)
     }
-
-    changeRating(food, newRating) {
-        let toUpdate = this.foodNameToFoodData.get(food);
-        let updated = new FoodData(toUpdate.name, toUpdate.cuisine, newRating);
-        this.foodNameToFoodData.set(food, updated);
-        this.cuisineNameToHeapifiedFoodData.get(toUpdate.cuisine).enqueue(updated);
+    if (!map_c2fr_pq.has(cuisine)) {
+      const fr_pq = new PriorityQueue({
+        compare: (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
+      })
+      map_c2fr_pq.set(cuisine, fr_pq)
     }
-
-    highestRated(cuisine) {
-        let highestRatedFoodForCuisine = "";
-        while (true) {
-            let food = this.cuisineNameToHeapifiedFoodData.get(cuisine).front();
-            if (food.rating !== this.foodNameToFoodData.get(food.name).rating) {
-                this.cuisineNameToHeapifiedFoodData.get(cuisine).dequeue();
-            } else {
-                highestRatedFoodForCuisine = food.name;
-                break;
-            }
-        }
-        return highestRatedFoodForCuisine;
+    const fr_pq = map_c2fr_pq.get(cuisine)
+    fr_pq.enqueue([food, rating])
+    map_f2r.set(food, rating)
+  }
+  FoodRatings.prototype.changeRating = function (food, newRating) {
+    const cuisine = map_f2c.get(food)
+    const fr_pq = map_c2fr_pq.get(cuisine)
+    const [food_, rating_] = fr_pq.front()
+    if (food_ === food) {
+      fr_pq.dequeue()
     }
+    fr_pq.enqueue([food, newRating])
+    map_f2r.set(food, newRating)
+  }
+  FoodRatings.prototype.highestRated = function (cuisine) {
+    const fr_pq = map_c2fr_pq.get(cuisine)
+    while (1) {
+      const [food, rating] = fr_pq.front()
+      const newRating = map_f2r.get(food)
+      if (rating === newRating) {
+        return food
+      } else {
+        fr_pq.dequeue()
+        fr_pq.enqueue([food, newRating])
+      }
+    }
+  }
 }
