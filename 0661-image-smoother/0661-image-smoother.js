@@ -2,28 +2,48 @@
  * @param {number[][]} img
  * @return {number[][]}
  */
-var imageSmoother = function(img) {
-    const rows = img.length;
-    const cols = img[0].length;
-    const result = new Array(rows);
-
-    for (let i = 0; i < rows; ++i) {
-        result[i] = new Array(cols);
-
-        for (let j = 0; j < cols; ++j) {
-            let totalSum = 0;
-            let count = 0;
-
-            for (let x = Math.max(0, i - 1); x < Math.min(rows, i + 2); ++x) {
-                for (let y = Math.max(0, j - 1); y < Math.min(cols, j + 2); ++y) {
-                    totalSum += img[x][y];
-                    count += 1;
-                }
-            }
-
-            result[i][j] = Math.floor(totalSum / count);
+var imageSmoother = function (img) {
+  const m = img.length,
+    n = img[0].length;
+  return img.map((row, i) =>
+    row.map((cell, j) => {
+      let c = 1;
+      if (i > 0) {
+        const prevRow = img[i - 1];
+        cell += prevRow[j];
+        c++;
+        if (j > 0) {
+          cell += prevRow[j - 1];
+          c++;
         }
-    }
+        if (j < n - 1) {
+          cell += prevRow[j + 1];
+          c++;
+        }
+      }
+      if (i < m - 1) {
+        const nextRow = img[i + 1];
+        cell += nextRow[j];
+        c++;
+        if (j > 0) {
+          cell += nextRow[j - 1];
+          c++;
+        }
+        if (j < n - 1) {
+          cell += nextRow[j + 1];
+          c++;
+        }
+      }
+      if (j > 0) {
+        cell += row[j - 1];
+        c++;
+      }
+      if (j < n - 1) {
+        cell += row[j + 1];
+        c++;
+      }
 
-    return result;
+      return ~~(cell / c);
+    })
+  );
 };
