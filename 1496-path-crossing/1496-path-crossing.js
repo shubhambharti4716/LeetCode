@@ -2,33 +2,27 @@
  * @param {string} path
  * @return {boolean}
  */
-var isPathCrossing = function(path) {
-    let moves = {
-        'N': [0, 1], 
-        'S': [0, -1], 
-        'W': [-1, 0],
-        'E': [1, 0]
-    };
-
-    let visited = new Set();
-    visited.add("0,0");
+var isPathCrossing = function (path) {
+    const positions = new Set()
     let x = 0;
     let y = 0;
+    const navigate = {
+        "N": { x: 0, y: +1 },
+        "S": { x: 0, y: -1 },
+        "W": { x: -1, y: 0 },
+        "E": { x: +1, y: 0 },
+    }
+    positions.add("0-0")
+    for (const direction of path) {
+        x += navigate[direction].x;
+        y += navigate[direction].y;
 
-    for (let c of path) {
-        let curr = moves[c];
-        let dx = curr[0]; 
-        let dy = curr[1];
-
-        x += dx;
-        y += dy;
-
-        let hash = `${x},${y}`;
-
-        if (visited.has(hash)) {
-            return true;
+        if (positions.has(`${x}-${y}`)) {
+            console.log(positions);
+            return true
         }
-        visited.add(hash);
+
+        positions.add(`${x}-${y}`);
     }
 
     return false;
