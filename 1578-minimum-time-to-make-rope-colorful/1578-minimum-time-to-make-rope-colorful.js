@@ -4,24 +4,20 @@
  * @return {number}
  */
 var minCost = function(colors, neededTime) {
-    let totalTime = 0;
-    let i = 0;
-    let j = 0;
-
-    while (i < neededTime.length && j < neededTime.length) {
-        let currTotal = 0;
-        let currMax = 0;
-
-        while (j < neededTime.length && colors[i] === colors[j]) {
-            currTotal += neededTime[j];
-            currMax = Math.max(currMax, neededTime[j]);
-            j++;
+    let output = 0;
+    let currentCursor = 0;
+    for (let i = 1; i < colors.length; i++) {
+        if (colors[i] === colors[currentCursor]) {
+            if (neededTime[i] > neededTime[currentCursor]) {
+                output += neededTime[currentCursor];
+                currentCursor = i;
+            } else {
+                output += neededTime[i];
+            }
+        } else {
+            currentCursor = i;
         }
-
-        totalTime += currTotal - currMax;
-        i = j;
     }
-
-    return totalTime;
+    
+    return output;
 };
-
