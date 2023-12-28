@@ -3,28 +3,24 @@
  * @param {number} k
  * @return {number}
  */
-var getLengthOfOptimalCompression = function(s, k) {
-    const n = s.length;
-    const dp = Array.from({ length: 110 }, () => Array(110).fill(9999));
-    dp[0][0] = 0;
+var getLengthOfOptimalCompression = function (s, k) {
+  if (s.length <= k) return 0;
+  const hash = Array.from({ length: s.length }, (_) => new Array(k + 1));
 
-    for (let i = 1; i <= n; i++) {
-        for (let j = 0; j <= k; j++) {
-            let cnt = 0, del = 0;
-            for (let l = i; l >= 1; l--) {
-                if (s.charAt(l - 1) === s.charAt(i - 1)) 
-                    cnt++;
-                else 
-                    del++;
-                
-                if (j - del >= 0) {
-                    dp[i][j] = Math.min(dp[i][j], dp[l - 1][j - del] + 1 + (cnt >= 100 ? 3 : cnt >= 10 ? 2 : cnt >= 2 ? 1 : 0));
-                }
-            }
-            if (j > 0)
-                dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
-        }
+  const dfs = (idx, k) => {
+    if (k + idx >= s.length) return 0;
+    if (k < 0) return Infinity;
+    if (hash[idx][k] != undefined) return hash[idx][k];
+    let res = dfs(idx + 1, k - 1);
+    let diff = 0;
+    let same = 0;
+    for (let i = idx; i < s.length && k - diff >= 0; i++) {
+      s[i] == s[idx] ? same++ : diff++;
+      const length =
+        same <= 1 ? 1 : Math.floor(Math.log(same) / Math.log(10)) + 2;
+      res = Math.min(res, length + dfs(i + 1, k - diff));
     }
-    return dp[n][k];
+    return (hash[idx][k] = res);
+  };
+  return dfs(0, k);
 };
-
