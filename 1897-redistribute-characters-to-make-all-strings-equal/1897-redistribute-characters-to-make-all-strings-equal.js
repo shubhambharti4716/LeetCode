@@ -3,29 +3,27 @@
  * @return {boolean}
  */
 var makeEqual = function(words) {
-    if (words.length === 1) {
+    let letterCounts = new Array(26).fill(0);
+
+    if(words.length == 1) {
         return true;
     }
-
-    let totalCharCount = 0;
-    for (const s of words) {
-        totalCharCount += s.length;
-    }
-
-    if (totalCharCount % words.length !== 0) {
-        return false;
-    }
-
-    let myMap = new Array(26).fill(0);
-    for (const s of words) {
-        for (const c of s) {
-            myMap[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+ 
+    for(let word of words) {
+        for(let i = 0; i < word.length; i++) {
+            let cIdx = word.charCodeAt(i)-97;
+            letterCounts[cIdx]++;
         }
     }
 
-    for (const i of myMap) {
-        if (i % words.length !== 0) {
-            return false;
+    let unusedLetters=0;
+    for(let i = 0; i < letterCounts.length; i++) {
+        if(letterCounts[i] != 0) {
+            if(letterCounts[i]%words.length != 0) {
+                return false;
+            }
+        } else {
+            unusedLetters++;
         }
     }
 
