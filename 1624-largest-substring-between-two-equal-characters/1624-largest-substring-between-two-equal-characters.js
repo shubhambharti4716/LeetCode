@@ -2,17 +2,14 @@
  * @param {string} s
  * @return {number}
  */
-function maxLengthBetweenEqualCharacters(s) {
-    let ans = -1;
+var maxLengthBetweenEqualCharacters = function(s) {
+    max = -1
 
-    for (let left = 0; left < s.length; left++) {
-        for (let right = left + 1; right < s.length; right++) {
-            if (s[left] === s[right]) {
-                ans = Math.max(ans, right - left - 1);
-            }
-        }
+    for (let i = 0; i < s.length; i++) {
+        len = i - s.indexOf(s[i]) - 1
+        if (len > max)
+            max = len
     }
 
-    return ans;
-}
-
+    return max
+};
