@@ -1,19 +1,25 @@
 class Solution {
-    public int leastInterval(char[] tasks, int n) {
-        //Build Frquency Array
-        int[] freq = new int[26];
-        for(char task : tasks) {
-            freq[task-'A']++;
-        }
-        Arrays.sort(freq);//Sort to get max frequency
-        int maxFreq = freq[25];
-        int idleTime = (maxFreq-1) * n;//eg, A : 3, n=2 -> A_ _A_ _A
+         public int leastInterval(char[] tasks, int n) {
+            if (n == 0) {
+                return tasks.length;
+            }
+            int[] f = new int[26];
+            for (char c : tasks) {
+                f[c - 'A']++;
+            }
+            int max = 0;
+            int count = 0;
+            for (int i : f) {
+                if (i > max) {
+                    max = i;
+                    count = 1;
+                } else if (i == max) {
+                    count++;
+                }
 
-        for(int i = 24; i >= 0; i--) {
-            //Math.min handles the case where another task has same freq
-            idleTime-= Math.min(maxFreq-1, freq[i]);
+            }
+            return Math.max(tasks.length, (max - 1) * (n + 1) + count);
+            // (max-1)*n su pauze između + max sami taskovi -1 + count (ako je count 1,
+            // -1+1=0)
         }
-        //Idle time cannot be negative, cap at 0
-        return tasks.length + Math.max(idleTime, 0);
     }
-}
