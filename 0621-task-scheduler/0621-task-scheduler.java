@@ -1,25 +1,19 @@
 class Solution {
     public int leastInterval(char[] tasks, int n) {
-        // Create a frequency array to keep track of the count of each task
+        //Build Frquency Array
         int[] freq = new int[26];
-        for (char task : tasks) {
-            freq[task - 'A']++;
+        for(char task : tasks) {
+            freq[task-'A']++;
         }
+        Arrays.sort(freq);//Sort to get max frequency
+        int maxFreq = freq[25];
+        int idleTime = (maxFreq-1) * n;//eg, A : 3, n=2 -> A_ _A_ _A
 
-        // Sort the frequency array in non-decreasing order
-        Arrays.sort(freq);
-        // Calculate the maximum frequency of any task
-        int maxFreq = freq[25] - 1;
-        // Calculate the number of idle slots that will be required
-        int idleSlots = maxFreq * n;
-
-        // Iterate over the frequency array from the second highest frequency to the lowest frequency
-        for (int i = 24; i >= 0 && freq[i] > 0; i--) {
-            // Subtract the minimum of the maximum frequency and the current frequency from the idle slots
-            idleSlots -= Math.min(maxFreq, freq[i]);
+        for(int i = 24; i >= 0; i--) {
+            //Math.min handles the case where another task has same freq
+            idleTime-= Math.min(maxFreq-1, freq[i]);
         }
-
-        // If there are any idle slots left, add them to the total number of tasks
-        return idleSlots > 0 ? idleSlots + tasks.length : tasks.length;
+        //Idle time cannot be negative, cap at 0
+        return tasks.length + Math.max(idleTime, 0);
     }
 }
