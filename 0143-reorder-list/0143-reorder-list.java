@@ -9,33 +9,30 @@
  * }
  */
 class Solution {
+    
+    private ListNode temp;
+    private boolean isStop;
+
     public void reorderList(ListNode head) {
-        
-        ListNode cur = head;
-        
-        List<ListNode> list = new ArrayList<>();  
-        while (cur != null){
-            list.add(cur);
-            cur = cur.next;
+        temp = head;
+        isStop = false;
+        reorder(head);
+    }
+
+    private void reorder(ListNode head) {
+        if (head == null) return;
+        reorder(head.next);
+
+        if (!isStop) {
+            ListNode next = temp.next;
+            temp.next = head;
+            head.next = next;
+            temp = next;
         }
-        cur = head;  
-        int l = 1, r = list.size() - 1;  
-        int count = 0;
-        while (l <= r){
-            if (count % 2 == 0){
-                
-                cur.next = list.get(r);
-                r--;
-            }else {
-                
-                cur.next = list.get(l);
-                l++;
-            }
-            
-            cur = cur.next;
-            count++;
+
+        if (temp != null && temp.next == head) {
+            temp.next = null;
+            isStop = true;
         }
-        
-        cur.next = null;
     }
 }
