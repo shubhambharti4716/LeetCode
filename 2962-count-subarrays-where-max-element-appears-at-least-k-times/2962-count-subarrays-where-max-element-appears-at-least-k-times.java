@@ -1,27 +1,20 @@
 class Solution {
     public long countSubarrays(int[] nums, int k) {
-        long maxNum = Long.MIN_VALUE, count = 0;
-        long left = 0, right = 0, ans = 0;
-        
-        // Find the maximum element in the array
-        for (int num : nums) {
-            maxNum = Math.max(maxNum, num);
-        }
-        
-        while (right < nums.length || left > right) {
-            if (nums[(int)right] == maxNum) {
+        long res = 0;
+        int max = 0, count = 0, n = nums.length;
+        for (int num : nums)
+            max = Math.max(max, num);
+        int l = 0;
+        for (int r = 0; r < n; r++) {
+            if (nums[r] == max)
                 count++;
-            }
-            // If count is greater than or equal to k, calculate subarrays count
             while (count >= k) {
-                if (nums[(int)left] == maxNum) {
+                res += n - r;
+                if (nums[l] == max)
                     count--;
-                }
-                left++;
-                ans += nums.length - right;
+                l++;
             }
-            right++;
         }
-        return ans;
+        return res;
     }
 }
