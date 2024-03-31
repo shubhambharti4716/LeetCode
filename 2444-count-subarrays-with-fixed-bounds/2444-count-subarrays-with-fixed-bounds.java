@@ -1,26 +1,18 @@
-class Solution 
-{
-    public long countSubarrays(int[] a, int m, int M) 
-    {
-        int x=-1;
-        int y=-1;
-        int l=0;
-        long c=0;
-        for(int i=0; i<a.length; i++)
-        {
-            if(a[i]<m || a[i]>M)
-            {
-                l = i+1;
-                x = i;
-                y = i;
-                continue;
+class Solution {
+    public long countSubarrays(int[] nums, int minK, int maxK) {
+        int minI = -1, maxI = -1, left = -1, right = 0;
+        long count = 0;
+        while(right < nums.length){
+            if(nums[right] < minK || nums[right] > maxK){
+                minI = right;
+                maxI = right;
+                left = right;
             }
-            if(a[i] == m)
-                x = i;
-            if(a[i] == M)
-                y = i;
-            c+= (i-l+1) - (i - (Math.min(x,y)+1)+1);
+            minI = nums[right] == minK ? right : minI;
+            maxI = nums[right] == maxK ?  right : maxI;
+            count += Math.min(minI, maxI) - left;
+            right++;
         }
-        return c;
+        return count;
     }
 }
