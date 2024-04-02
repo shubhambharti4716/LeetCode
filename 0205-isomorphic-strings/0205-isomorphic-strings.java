@@ -1,20 +1,33 @@
 class Solution {
     public boolean isIsomorphic(String s, String t) {
-        
-        if(s.length() != t.length())
+
+        if (s.length() != t.length()) {
             return false;
-
-        int [] tempS = new int[127];
-        int [] tempT = new int[127];
-        for(int i = 0; i < s.length(); i++){
-            char charS = s.charAt(i);
-            char charT = t.charAt(i);
-            if(tempS[charS] != tempT[charT])
-                return false;
-
-            tempS[charS] = i + 1;
-            tempT[charT] = i + 1;
         }
+
+        int l = s.length();
+
+        int[] map1 = new int[256];
+        int[] map2 = new int[256];
+
+        for (int i = 0; i < l; i++) {
+            char ch1 = s.charAt(i);
+            char ch2 = t.charAt(i);
+
+            if (map1[ch1]>0) {
+                if (map1[ch1] != ch2) {
+                    return false;
+                } 
+            } else {
+                if (map2[ch2]==1) {
+                    return false;
+                } else {
+                    map1[ch1]=ch2;
+                    map2[ch2]=1;
+                }
+            }
+        }
+
         return true;
     }
 }
