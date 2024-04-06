@@ -1,29 +1,26 @@
 class Solution {
     public String minRemoveToMakeValid(String s) {
-        int n = s.length();
-        boolean[] vis = new boolean[n];
-        Stack<Integer> st = new Stack<>();
-        for (int i = 0; i < n; i++) {
-            if (Character.isLowerCase(s.charAt(i)))
-                continue;
-            if (s.charAt(i) == '(') {
-                st.push(i);
-            } else {
-                if (!st.isEmpty()) {
-                    st.pop();
+        Deque<Integer> para = new ArrayDeque<>();
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == ')') {
+                if (para.size() != 0 && chars[para.getLast()] == '(') {
+                    para.removeLast();
                 } else {
-                    vis[i] = true;
+                    para.add(i);
                 }
+            } else if (chars[i] == '(') {
+                 para.add(i);
             }
         }
-        while (!st.isEmpty()) {
-            vis[st.pop()] = true;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+            if (para.size() != 0 && para.getFirst() == i) {
+                para.pop();
+                continue;
+            }
+            sb.append(chars[i]);
         }
-        StringBuilder ans = new StringBuilder();
-        for (int i = 0; i < n; i++) {
-            if (!vis[i])
-                ans.append(s.charAt(i));
-        }
-        return ans.toString();
+        return sb.toString();
     }
 }
