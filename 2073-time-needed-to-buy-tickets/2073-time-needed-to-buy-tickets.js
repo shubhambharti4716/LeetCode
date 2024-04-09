@@ -3,25 +3,20 @@
  * @param {number} k
  * @return {number}
  */
+var timeRequiredToBuy = function (tickets, k) {
+    let time = 0; // Initialize time counter
+    let kTickets = tickets[k]; // Tickets that the person at position k wants to buy
 
-var timeRequiredToBuy = function(tickets, k) {
-    let queue = []
-    let count = 0
-
-    for(let i in tickets){
-        queue.push({t: tickets[i], i:i})
+    // Loop through each person in the line
+    for (let i = 0; i < tickets.length; i++) {
+        if (i <= k) {
+            // For people ahead of or at k, add the minimum of their ticket count or k's ticket count to time
+            time += Math.min(tickets[i], kTickets);
+        } else {
+            // For people behind k, only consider their ticket count if it's less than k's ticket count
+            time += Math.min(tickets[i], kTickets - 1);
+        }
     }
 
-    while(true){
-        const person = queue.shift()
-        person.t = person.t -1
-        count += 1
-        if(person.t > 0) {
-            queue.push(person)
-        } else if(person.i == k){
-            break
-        } 
-    }
-    
-    return count
+    return time;
 };
