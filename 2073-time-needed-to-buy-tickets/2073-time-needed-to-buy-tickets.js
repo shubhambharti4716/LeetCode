@@ -3,16 +3,25 @@
  * @param {number} k
  * @return {number}
  */
-var timeRequiredToBuy = function(tickets, k) {
-    let total = 0;
 
-    for (let i = 0; i < tickets.length; i++) {
-        if (i <= k) {
-            total += Math.min(tickets[i], tickets[k]);
-        } else {
-            total += Math.min(tickets[i], tickets[k] - 1);
-        }
+var timeRequiredToBuy = function(tickets, k) {
+    let queue = []
+    let count = 0
+
+    for(let i in tickets){
+        queue.push({t: tickets[i], i:i})
     }
 
-    return total;
+    while(true){
+        const person = queue.shift()
+        person.t = person.t -1
+        count += 1
+        if(person.t > 0) {
+            queue.push(person)
+        } else if(person.i == k){
+            break
+        } 
+    }
+    
+    return count
 };
